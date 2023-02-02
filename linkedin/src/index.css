@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+
+/* Daisy ui button  */
+
+.btn{
+  text-transform: none;
+}
+
+/* First card component */
+
+.input-group > *, .input-group > .input, .input-group > .select {
+  border-radius: 0px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+
+/* To remove overflow in main content */
+
+.content {
+  overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+.content::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}
+
+/* rotate icons */
+
+.like, .comment, .share {
+  transform: rotateY(180deg)
+}
+
+
+/* button group in article section */
+
+.button-group .btn {
+  border-radius: 0px !important;
+}
+
+@tailwind utilities;
+

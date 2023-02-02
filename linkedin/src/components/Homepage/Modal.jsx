@@ -24,6 +24,7 @@ function Modal() {
         closeImgRef.current.style.display = 'block'
         inputRef.current.style.display = 'none'
     }
+   
 
     const deselectImg = () => {
         imgRef.current.style.display = 'none'
@@ -48,7 +49,11 @@ function Modal() {
                 </div>
                 
                 <textarea placeholder = 'What do you want to talk about?' className=' mt-2 p-2 border-2 border-slate-300 h-32 w-full resize-none'></textarea>
-                {inputMediaField.img && <input type="file" name="myImg" id="myImg" ref = {inputRef} onChange = {postImage}/>}
+                {inputMediaField.img && 
+                <label className='cursor-pointer font-bold' ref = {inputRef} htmlFor = 'myImg'> 
+                Select and image
+                </label>}
+                <input type="file" name="myImg" id="myImg" className = 'hidden' onChange = {postImage}/>
                 <div ref = {imgRef} className = 'relative hidden'>
                     <button className='absolute right-0 m-2  border-black border-[1px] text-black btn-circle font-bold hover:bg-black hover:text-white' ref = {closeImgRef} onClick = {deselectImg}>✕</button>
                     <img />

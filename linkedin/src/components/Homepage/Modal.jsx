@@ -2,14 +2,29 @@ import React from 'react'
 import { useState, useRef } from 'react'
 import User from '../../assets/user.svg'
 import ReactPlayer from 'react-player'
+import UserContext from '../../utils/createContext'
+import { useContext } from 'react'
+
 
 function Modal() {
     const [inputMediaField,setInputMediaField] = useState({img: false, video: false})
+    const [userInput,setUserInput] = useState(null)
     const [videoURL, setVideoURL] = useState('')
-  
+
     const imgRef = useRef(null)
     const inputRef = useRef(null)
     const closeImgRef = useRef(null)
+    const modalRef = useRef(null)
+    if(modalRef.current) {
+        modalRef.current.style.display = 'flex'
+        modalRef.current.style.className = 'modal'
+    }
+
+    const showModal = () => {
+        modalRef.current.style.display = 'flex'
+        modalRef.current.style.className = 'modal'
+    }
+
     const postImage = (e) => {
         imgRef.current.style.display = 'block'
         const img = imgRef.current.lastChild
@@ -35,10 +50,22 @@ function Modal() {
         inputRef.current.style.display = 'block'
         
     }
+
+    /* firebase */
+    const {addPost} = useContext(UserContext)
+    function createPost() {
+        if(!userInput) {
+            alert('Hey write something')
+        } else {
+            addPost(userInput)
+            modalRef.current.style.display = 'none'
+        }
+    }
+
   return (
     <>
-      <input type="checkbox" id="my-modal-3" className="modal-toggle" />
-        <div className="modal">
+      <input type="checkbox" id="my-modal-3" className="modal-toggle" onClick={showModal}/>
+        <div className="modal" ref = {modalRef}>
             <div className="modal-box relative">
             <label htmlFor="my-modal-3" className="btn btn-sm btn-circle absolute right-2 top-2 bg-white text-blue-500 border-blue-500 hover:bg-blue-500 hover:border-blue-500 hover:text-white" >✕</label>
             <h3 className="text-lg font-bold text-slate-600">Create a post</h3>
@@ -49,7 +76,7 @@ function Modal() {
                     <img src={User} alt="user icon" className='cursor-pointer h-10 rounded-full '/>
                     <h4 className='font-bold'>{localStorage.getItem('username')}</h4>
                 </div>
-                <textarea placeholder = 'What do you want to talk about?' className=' mt-2 p-2 border-2 border-slate-300 h-32 w-full resize-none'></textarea>
+                <textarea placeholder = 'What do you want to talk about?' className=' mt-2 p-2 border-2 border-slate-300 h-32 w-full resize-none' onChange={(e) => setUserInput(e.target.value)}></textarea>
                 {inputMediaField.img && 
                 <label className='cursor-pointer font-bold' ref = {inputRef} htmlFor = 'myImg'> 
                 Select and image
@@ -80,7 +107,7 @@ function Modal() {
                     <span className='ml-1'>Anyone</span>
                     </button>
                     </div>
-                    <button className='text-blue-700 px-4 py-2 rounded-2xl border-2 border-blue-500 ml-auto hover:bg-blue-500 hover:text-white'>Post</button>
+                    <button className='text-blue-700 px-4 py-2 rounded-2xl border-2 border-blue-500 ml-auto hover:bg-blue-500 hover:text-white' onClick={createPost}>Post</button>
                 </div>
                 </article>
             </section>

@@ -1,5 +1,6 @@
 import React, { useState, createContext, useEffect } from "react"
-import { auth, provider } from "../firebase"
+import { db,auth, provider } from "../firebase"
+import { collection, addDoc,serverTimestamp } from "firebase/firestore"
 import { 
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
@@ -9,7 +10,7 @@ import {
  } from "firebase/auth"
 
 
-const UserContext = createContext(null)  //create 
+const UserContext = createContext('')  //create 
 
 
 
@@ -78,6 +79,18 @@ export const UserContextProvider = ({children}) => {  //Provide
         window.location.href = '/login'
     }
 
+    const addPost = async (userInput) => {
+        try {
+            const docRef = await addDoc(collection(db, "posts"), {
+              content: userInput,
+              createdAt: serverTimestamp()
+            });
+            console.log("Document written with ID: ", docRef.id);
+          } catch (e) {
+            console.error("Error adding document: ", e);
+          }
+    }
+
     const values = {
         user,
         setUser,
@@ -86,7 +99,8 @@ export const UserContextProvider = ({children}) => {  //Provide
         register,
         login,
         logout,
-        googleAuth
+        googleAuth,
+        addPost,
     }
 
     return <UserContext.Provider value = {values}>{children}</UserContext.Provider>

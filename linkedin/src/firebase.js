@@ -3,6 +3,7 @@ import {getFirestore} from 'firebase/firestore'
 import { getAuth } from "firebase/auth"
 import { GoogleAuthProvider} from "firebase/auth"
 
+
 const firebaseConfig = {
     apiKey: "AIzaSyAya8rvoYuz_FlQ-TcErBEu462BgkPPNn0",
     authDomain: "linkedin-clone-34659.firebaseapp.com",

@@ -3,10 +3,12 @@ import User from '../../assets/user.svg'
 import Background from '../../assets/background.jpg'
 import Modal from './Modal'
 import Posts from './Posts'
+import { useState } from 'react'
 
 
 
 const MainContent = () => {
+  const [imgRef, setImgRef] = useState('')
   return (
     <>
       <div className= 'h-fit mb-4 bg-white p-2 rounded-xl'>
@@ -17,7 +19,7 @@ const MainContent = () => {
                 Share a post 
               </label>
             </div>
-            <Modal />
+            <Modal setImgRef = {setImgRef}/>
             <div className='flex justify-between m-2'>
               <div className='cursor-pointer p-2 hover:bg-slate-200'>
                 <span className="fa-solid fa-image text-blue-400"></span>
@@ -37,7 +39,7 @@ const MainContent = () => {
               </div>
             </div>
           </div>
-          <Posts />
+          <Posts imgRef = {imgRef}/>
           <article className='h-fit bg-white my-4 rounded-xl'>
             <div className='p-2 h-2/3 flex gap-3'>
               <img src={User} alt="User Icon" className='h-16'/>

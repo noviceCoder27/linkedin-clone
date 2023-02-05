@@ -4,21 +4,19 @@ import User from '../../assets/user.svg'
 import ReactPlayer from 'react-player'
 import UserContext from '../../utils/createContext'
 import { useContext } from 'react'
+import { getStorage, ref, uploadBytes, listAll } from "firebase/storage"
 
 
-function Modal() {
+function Modal({setImgRef}) {
     const [inputMediaField,setInputMediaField] = useState({img: false, video: false})
-    const [userInput,setUserInput] = useState(null)
+    const [userInput,setUserInput] = useState('')
     const [videoURL, setVideoURL] = useState('')
+    const [imgFile, setImgFIle] = useState(null)
 
     const imgRef = useRef(null)
     const inputRef = useRef(null)
     const closeImgRef = useRef(null)
     const modalRef = useRef(null)
-    if(modalRef.current) {
-        modalRef.current.style.display = 'flex'
-        modalRef.current.style.className = 'modal'
-    }
 
     const showModal = () => {
         modalRef.current.style.display = 'flex'
@@ -34,6 +32,7 @@ function Modal() {
         } else {
         try {
             img.src = URL.createObjectURL(e.target.files[0])
+            setImgFIle(e.target.files[0])
         } catch(err) {
             console.log(err.message)
         }
@@ -57,11 +56,21 @@ function Modal() {
         if(!userInput) {
             alert('Hey write something')
         } else {
-            addPost(userInput)
-            modalRef.current.style.display = 'none'
-        }
+            addPost(userInput,videoURL)
+            setUserInput('')
+           /* upload image */
+            const storage = getStorage();
+            if(imgFile) {
+                const imageListRef = ref(storage, `images/${imgFile?.name}`)
+                uploadBytes(imageListRef, imgFile).then(() => {
+                    console.log('Uploaded a file!');
+                })
+                setImgRef(imageListRef)
+            }
+         }
+        modalRef.current.style.display = 'none'
+        imgRef.current.style.display = 'none'
     }
-
   return (
     <>
       <input type="checkbox" id="my-modal-3" className="modal-toggle" onClick={showModal}/>
@@ -76,12 +85,12 @@ function Modal() {
                     <img src={User} alt="user icon" className='cursor-pointer h-10 rounded-full '/>
                     <h4 className='font-bold'>{localStorage.getItem('username')}</h4>
                 </div>
-                <textarea placeholder = 'What do you want to talk about?' className=' mt-2 p-2 border-2 border-slate-300 h-32 w-full resize-none' onChange={(e) => setUserInput(e.target.value)}></textarea>
+                <textarea placeholder = 'What do you want to talk about?' className=' mt-2 p-2 border-2 border-slate-300 h-32 w-full resize-none' value = {userInput} onChange={(e) => setUserInput(e.target.value)}></textarea>
                 {inputMediaField.img && 
                 <label className='cursor-pointer font-bold' ref = {inputRef} htmlFor = 'myImg'> 
                 Select and image
                 </label>}
-                <input type="file" name="myImg" id="myImg" className = 'hidden' onChange = {postImage}/>
+                <input type="file" name="myImg" id="myImg" className = 'hidden'onChange = {postImage}/>
                 {inputMediaField.video && 
                 <>
                   <input type="text" name="myVideo" id="myVideo" placeholder='enter a URL'className='p-1 border-2  border-slate-300 rounded-md'onChange={(e) => setVideoURL(e.target.value)}/>

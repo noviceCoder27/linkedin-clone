@@ -79,10 +79,11 @@ export const UserContextProvider = ({children}) => {  //Provide
         window.location.href = '/login'
     }
 
-    const addPost = async (userInput) => {
+    const addPost = async (userInput,videoURL) => {
         try {
             const docRef = await addDoc(collection(db, "posts"), {
               content: userInput,
+              videoURL,
               createdAt: serverTimestamp()
             });
             console.log("Document written with ID: ", docRef.id);

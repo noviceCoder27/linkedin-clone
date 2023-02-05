@@ -3,26 +3,20 @@ import User from '../../assets/user.svg'
 import Background from '../../assets/background.jpg'
 import { db } from '../../firebase'
 import { collection, getDocs, orderBy } from "firebase/firestore"
-import { getStorage, ref } from "firebase/storage" 
 import { useState,useEffect } from 'react'
 
-const Posts = () => {
+const Posts = ({imgRef}) => {
     useEffect(() => {
         getPosts()
       },[])
       const [userData, setUserData] = useState([])
-
-      function uploadImage(){
-        const storage = getStorage()
-        
-      }
-      
+  
       async function getPosts() {
         const userCollectionRef = collection(db, "posts")
         const data = await getDocs(userCollectionRef,orderBy('createdAt'))
         setUserData(data.docs.map(doc => ({...doc.data(), id: doc.id})))
       }
-        // console.log(userData[0]?.createdAt.toDate().toUTCString())
+
         const posts = userData.map(data => (
             <div key = {data.id}>
                 <article className='h-fit bg-white my-4 rounded-xl'>
